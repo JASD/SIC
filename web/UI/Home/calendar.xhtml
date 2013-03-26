@@ -1,0 +1,16 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:ui="http://java.sun.com/jsf/facelets">
+    <ui:component>
+        <h:outputText value="Bienvenido" style="color: #3366ff; font-weight: bold; padding-left: 25px"/>
+        <p:separator />
+        <p:schedule value="#{notaController.eventModel}" locale="es" style="width: 600px; padding-left: 25px; padding-top: 25px; font-size: 10px;" rightHeaderTemplate="month, basicWeek, basicDay" >
+
+            <p:ajax event="eventSelect" listener="#{notaController.onEventSelect}" update=":ids:notas" oncomplete="detalleNota.show()" />  
+
+        </p:schedule>
+    </ui:component> 
+</html>

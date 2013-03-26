@@ -1,0 +1,39 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:ui="http://java.sun.com/jsf/facelets"
+      xmlns:f="http://java.sun.com/jsf/core">
+    <ui:component>
+
+        <p:dialog widgetVar="nuevaNota" header="Nueva Nota" showEffect="fade" hideEffect="fade" modal="true" resizable="false">  
+            <h:form id="nnota">
+                <h:panelGrid columns="2" columnClasses="column" cellpadding="5">
+
+
+
+                    <h:outputLabel value="Contenido: " style="font-weight: bold"/>  
+                    <p:inputText value="#{notaController.selected.contenidoNota}" required="true">
+                        <f:validateLength maximum="100" />
+                    </p:inputText>
+
+                    <h:outputLabel  value="Desde Fecha:" style="font-weight: bold"/>  
+                    <p:calendar value="#{notaController.selected.fechaInicioNota}" showButtonPanel="true" 
+                                readOnlyInputText="true" pattern="yyyy/MM/dd" navigator="true" 
+                                popupIconOnly="true" effect="fadeIn" locale="es" required="true"/>
+                    <h:outputLabel value="Hasta:" style="font-weight: bold"/>  
+                    <p:calendar value="#{notaController.selected.fechaFinNota}" showButtonPanel="true" 
+                                readOnlyInputText="true" pattern="yyyy/MM/dd" navigator="true" 
+                                popupIconOnly="true" effect="fadeIn" locale="es" required="true"/> 
+
+                    <h:outputLabel value="Estado: " style="font-weight: bold"/>  
+                    <p:selectBooleanCheckbox value="#{notaController.selected.estadoNota}" /> 
+
+                    <p:commandButton value="Guardar" icon="guardar" update="currentUI" oncomplete="nuevaNota.hide()" actionListener="#{notaController.create}"/>
+
+                </h:panelGrid>
+            </h:form>
+        </p:dialog>
+    </ui:component>
+</html>

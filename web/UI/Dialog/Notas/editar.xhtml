@@ -1,0 +1,49 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:ui="http://java.sun.com/jsf/facelets"
+      xmlns:f="http://java.sun.com/jsf/core">
+    <ui:component>
+
+        <p:dialog widgetVar="editarNota" header="Editar Nota" showEffect="fade" hideEffect="fade" modal="true" resizable="false">  
+            <h:form id="enota">
+                <h:panelGrid columns="2" columnClasses="column" cellpadding="5">
+
+
+
+                    <h:outputLabel value="Contenido: " style="font-weight: bold"/>  
+                    <p:inplace>
+                        <p:inputText value="#{notaController.selected.contenidoNota}" required="true">
+                            <f:validateLength maximum="100" />
+                        </p:inputText>
+                    </p:inplace>
+
+                    <h:outputLabel  value="Desde Fecha:" style="font-weight: bold"/>  
+                    <p:inplace>
+                        <p:calendar value="#{notaController.selected.fechaInicioNota}" showButtonPanel="true" 
+                                    readOnlyInputText="true" pattern="yyyy/MM/dd" navigator="true" 
+                                    popupIconOnly="true" effect="fadeIn" locale="es"/>
+                    </p:inplace>
+                    <h:outputLabel value="Hasta:" style="font-weight: bold"/>  
+                    <p:inplace>
+                        <p:calendar value="#{notaController.selected.fechaFinNota}" showButtonPanel="true" 
+                                    readOnlyInputText="true" pattern="yyyy/MM/dd" navigator="true" 
+                                    popupIconOnly="true" effect="fadeIn" locale="es"/> 
+                    </p:inplace>
+
+                    <h:outputLabel value="Estado: " style="font-weight: bold"/>  
+
+                    <p:inplace>
+                        <p:selectBooleanCheckbox value="#{notaController.selected.estadoNota}" /> 
+                    </p:inplace>
+
+                    <p:commandButton value="Guardar" icon="guardar" update="currentUI" oncomplete="editarNota.hide()" actionListener="#{notaController.update}"/>
+                    <p:commandButton value="Eliminar" icon="eliminar" onclick="editarNota.hide()" oncomplete="eliminarNota.show()"/>
+
+                </h:panelGrid>
+            </h:form>
+        </p:dialog>
+    </ui:component>
+</html>

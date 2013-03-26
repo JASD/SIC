@@ -1,0 +1,29 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:ui="http://java.sun.com/jsf/facelets"
+      xmlns:f="http://java.sun.com/jsf/core">
+    <ui:component>
+
+        <p:dialog widgetVar="detalleNota" header="Detalle Nota" showEffect="fade" hideEffect="fade" modal="true" resizable="false">  
+            <h:form id="ids">
+                <h:panelGrid id="notas" columns="2" columnClasses="column" cellpadding="5">
+                    <h:outputLabel for="title" value="Contenido" />  
+                    <p:inputText id="title" value="#{notaController.event.title}" disabled="true"/>  
+
+                    <h:outputLabel for="from" value="Desde:" />  
+                    <p:inputMask id="from" value="#{notaController.event.startDate}" mask="99/99/9999" disabled="true">  
+                        <f:convertDateTime pattern="dd/MM/yyyy" />  
+                    </p:inputMask>  
+
+                    <h:outputLabel for="to" value="Haste:" />  
+                    <p:inputMask id="to" value="#{notaController.event.endDate}" mask="99/99/9999" disabled="true">  
+                        <f:convertDateTime pattern="dd/MM/yyyy" />  
+                    </p:inputMask>  
+                </h:panelGrid>
+            </h:form>
+        </p:dialog>
+    </ui:component>
+</html>

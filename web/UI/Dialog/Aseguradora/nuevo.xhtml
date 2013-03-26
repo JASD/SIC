@@ -1,0 +1,45 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:ui="http://java.sun.com/jsf/facelets"
+      xmlns:f="http://java.sun.com/jsf/core">
+    <ui:component>
+
+        <p:dialog widgetVar="nuevaAseguradora" header="Nueva Aseguradora" showEffect="fade" hideEffect="fade" modal="true" resizable="false">  
+            <h:form id="aseguradora">
+                <h:panelGrid columns="3" columnClasses="column" cellpadding="5">
+
+                    <h:outputLabel value="ID: " style="font-weight: bold"/>  
+                    <p:inputText id="ID" value="#{aseguradoraController.selected.idAseguradora}" required="true" validatorMessage="ID No Válido">
+                        <f:validateLength maximum="5" />
+                    </p:inputText>
+                    <p:message id="msg1" for="ID" display="icon" showDetail="false"/>  
+
+
+                    <h:outputLabel value="Nombre: " style="font-weight: bold"/>  
+                    <p:inputText id="name" value="#{aseguradoraController.selected.nombreAseguradora}" required="true" validatorMessage="Nombre Inválido">
+                        <f:validateLength maximum="100" />
+                    </p:inputText>
+                    <p:message id="msg2" for="name" display="icon" showDetail="false"/>  
+
+
+                    <h:outputLabel value="Télefono: " style="font-weight: bold"/>  
+                    <p:inputMask id="tel" value="#{aseguradoraController.selected.telefonoAseguradora}" mask="9999-9999" required="true"/>  
+                    <p:message id="msg3" for="tel" display="icon" showDetail="false"/>  
+
+                    <h:outputLabel value="Email: " style="font-weight: bold"/>  
+                    <p:inputText id="email" value="#{aseguradoraController.selected.emailAseguradora}" validatorMessage="Email No Válido">
+                        <f:validateRegex pattern="[\w\.-]*[a-zA-Z0-9_]@[\w\.-]*[a-zA-Z0-9]\.[a-zA-Z][a-zA-Z\.]*[a-zA-Z]"/>
+                    </p:inputText>
+                    <p:message id="msg4" for="email" display="icon" showDetail="false"/> 
+
+                    <h:outputLabel value="Estado: " style="font-weight: bold"/>  
+                    <p:selectBooleanCheckbox value="#{aseguradoraController.selected.estadoAseguradora}"/>
+                </h:panelGrid>
+                <p:commandButton value="Guardar" icon="guardar" update="currentUI" oncomplete="nuevaAseguradora.hide()" actionListener="#{aseguradoraController.create}"/>
+            </h:form>
+        </p:dialog>
+    </ui:component>
+</html>
