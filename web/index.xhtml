@@ -23,11 +23,11 @@
                     <p:panel id="acceso" header="Acceso de Usuario" styleClass="login">
                         <h:panelGrid columns="3">
                             <h:outputLabel for="usuario" value="Usuario" />
-                            <p:inputText id="usuario" value="#{usuarioController.idUser}" required="true" label="Usuario"/>
+                            <p:inputText id="usuario" value="#{usuarioController.idUser}" required="true" label="Usuario" autocomplete="off"/>
                             <p:message for="usuario" display="icon" showDetail="false"/>
 
                             <h:outputLabel for="contrasena" value="Contraseña" />
-                            <p:password id="contrasena" value="#{usuarioController.passUser}" label="Contrasena" required="true" feedback="false" minLength="5"/>
+                            <p:password id="contrasena" value="#{usuarioController.passUser}" label="Contrasena" required="true" feedback="false" minLength="5" autocomplete="off"/>
                             <p:message for="contrasena" display="icon" showDetail="false"/>
 
                             <p:commandButton value="Ingresar" update="acceso" actionListener="#{usuarioController.login}"/>

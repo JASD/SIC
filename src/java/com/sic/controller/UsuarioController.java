@@ -20,6 +20,7 @@ import javax.faces.event.ActionEvent;
 import javax.faces.model.DataModel;
 import javax.faces.model.ListDataModel;
 import javax.faces.model.SelectItem;
+import org.apache.commons.codec.digest.DigestUtils;
 
 @ManagedBean(name = "usuarioController")
 @SessionScoped
@@ -87,6 +88,8 @@ public class UsuarioController implements Serializable {
     }
 
     public void create() {
+     String encriptpass;
+     encriptpass=DigestUtils.sha256Hex(current.getContrasenaUsuario());
         try {
             getFacade().create(current);
             recreateModel();
@@ -224,7 +227,10 @@ public class UsuarioController implements Serializable {
     }
 
     public void login() {
-        Object[] parameters = {"idUsuario", getIdUser(), "contrasenaUsuario", getPassUser()};
+        String encriptpass;
+        encriptpass=DigestUtils.sha256Hex(passUser);
+
+        Object[] parameters = {"idUsuario", getIdUser(), "contrasenaUsuario", encriptpass};
         try {
             setUser(getFacade().getSingleResult("Usuario.findByLogin", parameters));
             setCurrentUI("UI/Home/calendar.xhtml");
