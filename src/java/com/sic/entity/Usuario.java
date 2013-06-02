@@ -58,6 +58,8 @@ public class Usuario implements Serializable {
     @Size(max = 128)
     @Column(name = "CONTRASENA_USUARIO")
     private String contrasenaUsuario;
+    @Column(name = "ESTADO_USUARIO")
+    private Boolean estadoUsuario;
     @JoinColumn(name = "ID_PERFIL", referencedColumnName = "ID_PERFIL")
     @ManyToOne(optional = false)
     private Perfil idPerfil;
@@ -123,6 +125,14 @@ public class Usuario implements Serializable {
 
     public void setIdPerfil(Perfil idPerfil) {
         this.idPerfil = idPerfil;
+    }
+
+    public Boolean getEstadoUsuario() {
+        return estadoUsuario;
+    }
+
+    public void setEstadoUsuario(Boolean estadoUsuario) {
+        this.estadoUsuario = estadoUsuario;
     }
 
     @Override
