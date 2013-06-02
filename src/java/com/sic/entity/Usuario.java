@@ -55,7 +55,7 @@ public class Usuario implements Serializable {
     @Size(max = 50)
     @Column(name = "SEGUNDO_APELLIDO_USUARIO")
     private String segundoApellidoUsuario;
-    @Size(max = 100)
+    @Size(max = 128)
     @Column(name = "CONTRASENA_USUARIO")
     private String contrasenaUsuario;
     @JoinColumn(name = "ID_PERFIL", referencedColumnName = "ID_PERFIL")
