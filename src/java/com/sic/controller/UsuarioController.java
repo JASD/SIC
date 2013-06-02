@@ -88,8 +88,8 @@ public class UsuarioController implements Serializable {
     }
 
     public void create() {
-     String encriptpass;
-     encriptpass=DigestUtils.sha256Hex(current.getContrasenaUsuario());
+        String encriptpass = DigestUtils.sha256Hex(current.getContrasenaUsuario());
+        current.setContrasenaUsuario(encriptpass);
         try {
             getFacade().create(current);
             recreateModel();
