@@ -241,7 +241,8 @@ public class UsuarioController implements Serializable {
     }
 
     public void logout() {
-        setUser(null);
+        //setUser(null);
+        FacesContext.getCurrentInstance().getExternalContext().invalidateSession();
         try {
             JsfUtil.redirect("index.xhtml");
         } catch (IOException ex) {
