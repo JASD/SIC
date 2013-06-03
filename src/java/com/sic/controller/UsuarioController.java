@@ -36,6 +36,7 @@ public class UsuarioController implements Serializable {
     private com.sic.facade.UsuarioFacade ejbFacade;
     private PaginationHelper pagination;
     private int selectedItemIndex;
+    private int loginIntents = 0;
 
     public UsuarioController() {
     }
@@ -227,16 +228,34 @@ public class UsuarioController implements Serializable {
     }
 
     public void login() {
-        String encriptpass;
-        encriptpass=DigestUtils.sha256Hex(passUser);
+        if (loginIntents == 4) {
+            try {
+                Usuario bloqueado = getFacade().find(idUser);
+                bloqueado.setEstadoUsuario(Boolean.FALSE);
+                getFacade().edit(bloqueado);
+                JsfUtil.addErrorMessage("Cuenta Bloqueada");
+                FacesContext.getCurrentInstance().getExternalContext().invalidateSession();
+            } catch (Exception e) {
+                FacesContext.getCurrentInstance().getExternalContext().invalidateSession();
+            }
 
-        Object[] parameters = {"idUsuario", getIdUser(), "contrasenaUsuario", encriptpass};
-        try {
-            setUser(getFacade().getSingleResult("Usuario.findByLogin", parameters));
-            setCurrentUI("UI/Home/calendar.xhtml");
-            JsfUtil.redirect("faces/home.xhtml");
-        } catch (Exception ex) {
-            JsfUtil.addErrorMessage(ex, "Usuario No Válido");
+        } else {
+            String encriptpass = DigestUtils.sha256Hex(passUser);
+            Object[] parameters = {"idUsuario", getIdUser(), "contrasenaUsuario", encriptpass};
+            try {
+                setUser(getFacade().getSingleResult("Usuario.findByLogin", parameters));
+                if (getUser().getEstadoUsuario()) {
+                    setCurrentUI("UI/Home/calendar.xhtml");
+                    JsfUtil.redirect("faces/home.xhtml");
+                } else {
+                    setUser(null);
+                    JsfUtil.addErrorMessage("Cuenta Bloqueada, contactar al Administrador");
+                }
+            } catch (Exception ex) {
+                loginIntents++;
+                setUser(null);
+                JsfUtil.addErrorMessage(ex, "Usuario No Válido, Intentos restantes: ".concat(String.valueOf(5 - loginIntents)));
+            }
         }
     }
 
