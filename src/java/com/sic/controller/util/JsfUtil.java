@@ -5,6 +5,8 @@ import com.sic.entity.Log;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.sql.Array;
+import java.util.ArrayList;
 import java.util.List;
 import javax.faces.application.FacesMessage;
 import javax.faces.component.UIComponent;
@@ -116,6 +118,9 @@ public class JsfUtil {
         JAXBContext jc = JAXBContext.newInstance(Log.class);
         Binder<Node> binder = jc.createBinder();
         Log log = (Log) binder.unmarshal(document);
+        if(log.getEvents() == null){
+            log.setEvents(new ArrayList<Event>());
+        }
         log.getEvents().add(event);
         binder.updateXML(log);
         TransformerFactory tf = TransformerFactory.newInstance();
