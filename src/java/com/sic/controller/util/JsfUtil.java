@@ -1,5 +1,9 @@
 package com.sic.controller.util;
 
+import com.sic.entity.Event;
+import com.sic.entity.Log;
+import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.List;
 import javax.faces.application.FacesMessage;
@@ -7,8 +11,26 @@ import javax.faces.component.UIComponent;
 import javax.faces.context.FacesContext;
 import javax.faces.convert.Converter;
 import javax.faces.model.SelectItem;
+import javax.servlet.ServletContext;
+import javax.xml.bind.Binder;
+import javax.xml.bind.JAXBContext;
+import javax.xml.bind.JAXBException;
+import javax.xml.parsers.DocumentBuilder;
+import javax.xml.parsers.DocumentBuilderFactory;
+import javax.xml.parsers.ParserConfigurationException;
+import javax.xml.transform.Transformer;
+import javax.xml.transform.TransformerConfigurationException;
+import javax.xml.transform.TransformerException;
+import javax.xml.transform.TransformerFactory;
+import javax.xml.transform.dom.DOMSource;
+import javax.xml.transform.stream.StreamResult;
+import org.w3c.dom.Document;
+import org.w3c.dom.Node;
+import org.xml.sax.SAXException;
 
 public class JsfUtil {
+
+    private static final String XML_LOG = "log-sic.xml";
 
     public static SelectItem[] getSelectItems(List<?> entities, boolean selectOne) {
         int size = selectOne ? entities.size() + 1 : entities.size();
@@ -64,7 +86,7 @@ public class JsfUtil {
         FacesMessage facesMsg = new FacesMessage(FacesMessage.SEVERITY_INFO, msg, msg);
         FacesContext.getCurrentInstance().addMessage("Información", facesMsg);
     }
-    
+
     public static void addWarningMessage(String msg) {
         FacesMessage facesMsg = new FacesMessage(FacesMessage.SEVERITY_WARN, msg, msg);
         FacesContext.getCurrentInstance().addMessage("Advertencia", facesMsg);
@@ -82,5 +104,30 @@ public class JsfUtil {
     public static void redirect(String url) throws IOException {
         FacesContext context = FacesContext.getCurrentInstance();
         context.getExternalContext().redirect(url);
+    }
+
+    public static void writeLog(Event event) throws JAXBException, FileNotFoundException, SAXException, ParserConfigurationException, IOException, TransformerConfigurationException, TransformerException {
+        ServletContext servletContext = (ServletContext) FacesContext.getCurrentInstance().getExternalContext().getContext();
+        String path = servletContext.getRealPath("/log/").concat("\\");
+        DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
+        DocumentBuilder db = dbf.newDocumentBuilder();
+        File xml = new File(path + XML_LOG);
+        Document document = db.parse(xml);
+        JAXBContext jc = JAXBContext.newInstance(Log.class);
+        Binder<Node> binder = jc.createBinder();
+        Log log = (Log) binder.unmarshal(document);
+        log.getEvents().add(event);
+        binder.updateXML(log);
+        TransformerFactory tf = TransformerFactory.newInstance();
+        Transformer t = tf.newTransformer();
+        t.transform(new DOMSource(document), new StreamResult(xml));
+    }
+
+    public static void putSession(Object obj, String name) {
+        FacesContext.getCurrentInstance().getExternalContext().getSessionMap().put(name, obj);
+    }
+
+    public static Object getSessionAtribute(String name) {
+        return FacesContext.getCurrentInstance().getExternalContext().getSessionMap().get(name);
     }
 }

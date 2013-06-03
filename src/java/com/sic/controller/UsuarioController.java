@@ -3,12 +3,18 @@ package com.sic.controller;
 import com.sic.entity.Usuario;
 import com.sic.controller.util.JsfUtil;
 import com.sic.controller.util.PaginationHelper;
+import com.sic.entity.Event;
 import com.sic.facade.UsuarioFacade;
+import java.io.FileNotFoundException;
 
 import java.io.IOException;
 import java.io.Serializable;
+import java.util.Calendar;
+import java.util.GregorianCalendar;
 import java.util.Locale;
 import java.util.ResourceBundle;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.ejb.EJB;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.SessionScoped;
@@ -20,7 +26,12 @@ import javax.faces.event.ActionEvent;
 import javax.faces.model.DataModel;
 import javax.faces.model.ListDataModel;
 import javax.faces.model.SelectItem;
+import javax.xml.bind.JAXBException;
+import javax.xml.parsers.ParserConfigurationException;
+import javax.xml.transform.TransformerConfigurationException;
+import javax.xml.transform.TransformerException;
 import org.apache.commons.codec.digest.DigestUtils;
+import org.xml.sax.SAXException;
 
 @ManagedBean(name = "usuarioController")
 @SessionScoped
@@ -37,6 +48,9 @@ public class UsuarioController implements Serializable {
     private PaginationHelper pagination;
     private int selectedItemIndex;
     private int loginIntents = 0;
+    private Calendar calendar = new GregorianCalendar();
+
+    ;
 
     public UsuarioController() {
     }
@@ -56,7 +70,6 @@ public class UsuarioController implements Serializable {
     public PaginationHelper getPagination() {
         if (pagination == null) {
             pagination = new PaginationHelper(10) {
-
                 @Override
                 public int getItemsCount() {
                     return getFacade().count();
@@ -233,6 +246,10 @@ public class UsuarioController implements Serializable {
                 Usuario bloqueado = getFacade().find(idUser);
                 bloqueado.setEstadoUsuario(Boolean.FALSE);
                 getFacade().edit(bloqueado);
+                Event event = new Event(calendar.getTime(), "Intento de acceso", idUser,
+                        "Se intento acceder a la cuenta de " + idUser
+                        + ", la cuenta esta bloqueada", "Usuario");
+                JsfUtil.writeLog(event);
                 JsfUtil.addErrorMessage("Cuenta Bloqueada");
                 FacesContext.getCurrentInstance().getExternalContext().invalidateSession();
             } catch (Exception e) {
@@ -245,16 +262,44 @@ public class UsuarioController implements Serializable {
             try {
                 setUser(getFacade().getSingleResult("Usuario.findByLogin", parameters));
                 if (getUser().getEstadoUsuario()) {
+                    Event event = new Event(calendar.getTime(), "Acceso al Sistema", idUser,
+                            "Usuario " + idUser + " ingreso correctamente al sistema", "Usuario");
+                    JsfUtil.writeLog(event);
+                    JsfUtil.putSession(user, "usuarioActual");
                     setCurrentUI("UI/Home/calendar.xhtml");
                     JsfUtil.redirect("faces/home.xhtml");
                 } else {
                     setUser(null);
                     JsfUtil.addErrorMessage("Cuenta Bloqueada, contactar al Administrador");
+                    Event event = new Event(calendar.getTime(), "Bloqueo de cuenta", idUser,
+                            "Se intento acceder 5 veces a la cuenta de " + idUser
+                            + ", la cuenta ha sido bloqueada", "Usuario");
+                    JsfUtil.writeLog(event);
                 }
             } catch (Exception ex) {
                 loginIntents++;
                 setUser(null);
                 JsfUtil.addErrorMessage(ex, "Usuario No Válido, Intentos restantes: ".concat(String.valueOf(5 - loginIntents)));
+                Event event = new Event(calendar.getTime(), "Intento de Acceso", idUser,
+                        "Se intento acceder a la cuenta de " + idUser
+                        + " con password equivocado", "Usuario");
+                try {
+                    JsfUtil.writeLog(event);
+                } catch (JAXBException ex1) {
+                    Logger.getLogger(UsuarioController.class.getName()).log(Level.SEVERE, null, ex1);
+                } catch (FileNotFoundException ex1) {
+                    Logger.getLogger(UsuarioController.class.getName()).log(Level.SEVERE, null, ex1);
+                } catch (SAXException ex1) {
+                    Logger.getLogger(UsuarioController.class.getName()).log(Level.SEVERE, null, ex1);
+                } catch (ParserConfigurationException ex1) {
+                    Logger.getLogger(UsuarioController.class.getName()).log(Level.SEVERE, null, ex1);
+                } catch (IOException ex1) {
+                    Logger.getLogger(UsuarioController.class.getName()).log(Level.SEVERE, null, ex1);
+                } catch (TransformerConfigurationException ex1) {
+                    Logger.getLogger(UsuarioController.class.getName()).log(Level.SEVERE, null, ex1);
+                } catch (TransformerException ex1) {
+                    Logger.getLogger(UsuarioController.class.getName()).log(Level.SEVERE, null, ex1);
+                }
             }
         }
     }
