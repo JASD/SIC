@@ -19,10 +19,22 @@
     </servlet-mapping>
     <session-config>
         <session-timeout>
-            30
+            2
         </session-timeout>
     </session-config>
     <welcome-file-list>
         <welcome-file>faces/index.xhtml</welcome-file>
     </welcome-file-list>
+    <error-page>
+        <exception-type>javax.faces.application.ViewExpiredException</exception-type>
+        <location>/faces/index.xhtml</location>
+    </error-page>
+    <error-page>
+        <error-code>404</error-code>
+        <location>/faces/error.xhtml</location>
+    </error-page>
+    <error-page>
+        <error-code>500</error-code>
+        <location>/faces/forbidden.xhtml</location>
+    </error-page>
 </web-app>
