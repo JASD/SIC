@@ -27,7 +27,7 @@
         </session-timeout>
         <cookie-config>
             <http-only>true</http-only>
-            <secure>true</secure>      
+            <secure>true</secure>
         </cookie-config>
     </session-config>
     <welcome-file-list>
@@ -45,4 +45,15 @@
         <error-code>500</error-code>
         <location>/faces/forbidden.xhtml</location>
     </error-page>
+    <security-constraint>
+        <web-resource-collection>
+            <web-resource-name>restricted methods</web-resource-name>
+            <url-pattern>/faces/*</url-pattern>
+            <http-method>TRACE</http-method>
+            <http-method>PUT</http-method>
+            <http-method>OPTIONS</http-method>
+            <http-method>DELETE</http-method>
+        </web-resource-collection>
+        <auth-constraint />
+    </security-constraint>
 </web-app>
