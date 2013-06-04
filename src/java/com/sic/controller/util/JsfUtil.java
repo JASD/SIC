@@ -5,7 +5,6 @@ import com.sic.entity.Log;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.sql.Array;
 import java.util.ArrayList;
 import java.util.List;
 import javax.faces.application.FacesMessage;
@@ -110,7 +109,7 @@ public class JsfUtil {
 
     public static void writeLog(Event event) throws JAXBException, FileNotFoundException, SAXException, ParserConfigurationException, IOException, TransformerConfigurationException, TransformerException {
         ServletContext servletContext = (ServletContext) FacesContext.getCurrentInstance().getExternalContext().getContext();
-        String path = servletContext.getRealPath("/log/").concat("\\");
+        String path = servletContext.getRealPath("/WEB-INF/log/").concat("\\");
         DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
         DocumentBuilder db = dbf.newDocumentBuilder();
         File xml = new File(path + XML_LOG);

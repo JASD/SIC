@@ -104,8 +104,13 @@ public class UsuarioController implements Serializable {
     public void create() {
         String encriptpass = DigestUtils.sha256Hex(current.getContrasenaUsuario());
         current.setContrasenaUsuario(encriptpass);
+        current.setEstadoUsuario(Boolean.TRUE);
         try {
             getFacade().create(current);
+            Event event = new Event(calendar.getTime(), "Nuevo Usuario", idUser,
+                    "Usuario " + idUser + " creo un nuevo usuario identificado como "
+                    + current.getIdUsuario(), "Usuario");
+            JsfUtil.writeLog(event);
             recreateModel();
             JsfUtil.addSuccessMessage(ResourceBundle.getBundle("/Bundle").getString("UsuarioCreated"));
 
@@ -306,6 +311,25 @@ public class UsuarioController implements Serializable {
 
     public void logout() {
         //setUser(null);
+        Event event = new Event(calendar.getTime(), "Salida del Sistema", idUser,
+                "Usuario " + idUser + " salio correctamente del sistema", "Usuario");
+        try {
+            JsfUtil.writeLog(event);
+        } catch (JAXBException ex) {
+            Logger.getLogger(UsuarioController.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (FileNotFoundException ex) {
+            Logger.getLogger(UsuarioController.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (SAXException ex) {
+            Logger.getLogger(UsuarioController.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (ParserConfigurationException ex) {
+            Logger.getLogger(UsuarioController.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (IOException ex) {
+            Logger.getLogger(UsuarioController.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (TransformerConfigurationException ex) {
+            Logger.getLogger(UsuarioController.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (TransformerException ex) {
+            Logger.getLogger(UsuarioController.class.getName()).log(Level.SEVERE, null, ex);
+        }
         FacesContext.getCurrentInstance().getExternalContext().invalidateSession();
         try {
             JsfUtil.redirect("index.xhtml");
